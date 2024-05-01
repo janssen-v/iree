@@ -77,9 +77,9 @@ option(IREE_BUILD_COMPILER "Builds the IREE compiler." ON)
 option(IREE_BUILD_TESTS "Builds IREE unit tests." ON)
 option(IREE_BUILD_DOCS "Builds IREE documentation files." OFF)
 option(IREE_BUILD_SAMPLES "Builds IREE sample projects." ON)
-option(IREE_BUILD_PYTHON_BINDINGS "Builds the IREE python bindings" OFF)
+option(IREE_BUILD_PYTHON_BINDINGS "Builds the IREE python bindings" ON)
 option(IREE_BUILD_TRACY "Builds tracy server tools." OFF)
-option(IREE_BUILD_BUNDLED_LLVM "Builds the bundled llvm-project (vs using installed)" ON)
+option(IREE_BUILD_BUNDLED_LLVM "Builds the bundled llvm-project (vs using installed)" OFF)
 
 # Properties controlling version and naming of release artifacts.
 set(IREE_RELEASE_PACKAGE_SUFFIX "" CACHE STRING "Suffix to append to distributed package names")
@@ -392,7 +392,7 @@ cmake_dependent_option(IREE_TARGET_BACKEND_VMVX "Enables the 'vmvx' compiler tar
 # Supported default target backends.
 cmake_dependent_option(IREE_TARGET_BACKEND_LLVM_CPU "Enables the 'llvm-cpu' compiler target backend" ${IREE_TARGET_BACKEND_DEFAULTS} ${IREE_BUILD_COMPILER} OFF)
 cmake_dependent_option(IREE_TARGET_BACKEND_LLVM_CPU_WASM "Enables WebAssembly in the 'llvm-cpu' compiler target backend" ${IREE_TARGET_BACKEND_DEFAULTS} ${IREE_TARGET_BACKEND_LLVM_CPU} OFF)
-cmake_dependent_option(IREE_TARGET_BACKEND_METAL_SPIRV "Enables the 'metal-spirv' compiler target backend" ${IREE_TARGET_BACKEND_DEFAULTS} ${IREE_BUILD_COMPILER} OFF)
+  cmake_dependent_option(IREE_TARGET_BACKEND_METAL_SPIRV "Enables the 'metal-spirv' compiler target backend" ${IREE_TARGET_BACKEND_DEFAULTS} ${IREE_BUILD_COMPILER} OFF)
 cmake_dependent_option(IREE_TARGET_BACKEND_VULKAN_SPIRV "Enables the 'vulkan-spirv' compiler target backend" ${IREE_TARGET_BACKEND_DEFAULTS} ${IREE_BUILD_COMPILER} OFF)
 
 # Default target backends that are not yet fully supported but are being brought up.
@@ -652,6 +652,12 @@ include(iree_setup_toolchain)
 #-------------------------------------------------------------------------------
 
 if(IREE_BUILD_PYTHON_BINDINGS)
+  set(Python3_EXECUTABLE "/Users/vincent/.pyenv/shims/python3")
+  set(Python3_LIBRARY "/Users/vincent/.pyenv/versions/3.11.9/lib/libpython3.11.dylib")
+  set(Python3_INCLUDE_DIR "/Users/vincent/.pyenv/versions/3.11.9/include/python3.11")
+  set(Python_EXECUTABLE "/Users/vincent/.pyenv/shims/python3")
+  set(Python_LIBRARY "/Users/vincent/.pyenv/versions/3.11.9/lib/libpython3.11.dylib")
+  set(Python_INCLUDE_DIR "/Users/vincent/.pyenv/versions/3.11.9/include/python3.11")
   # After CMake 3.18, we are able to limit the scope of the search to just
   # Development.Module. Searching for Development will fail in situations where
   # the Python libraries are not available. When possible, limit to just
