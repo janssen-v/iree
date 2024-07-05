@@ -85,7 +85,7 @@ option(IREE_BUILD_BUNDLED_LLVM "Builds the bundled llvm-project (vs using instal
 set(IREE_RELEASE_PACKAGE_SUFFIX "" CACHE STRING "Suffix to append to distributed package names")
 set(IREE_RELEASE_VERSION "0.1a1" CACHE STRING "Version to embed in distributed packages")
 set(IREE_RELEASE_REVISION "HEAD" CACHE STRING "Version control revision information to embed in distributed packages")
-option(IREE_EMBED_RELEASE_INFO "Embed the IREE version information in built artifacts." OFF)
+option(IREE_EMBED_RELEASE_INFO "Embed the IREE version information in built artifacts." ON)
 
 # Using already built host binaries, such as for cross-compilation.
 set(IREE_HOST_BIN_DIR_DEFAULT "")
@@ -100,7 +100,7 @@ set(IREE_HOST_BIN_DIR "${IREE_HOST_BIN_DIR_DEFAULT}" CACHE STRING "Path to direc
 option(IREE_BUILD_BINDINGS_TFLITE "Builds the IREE TFLite C API compatibility shim" ON)
 option(IREE_BUILD_BINDINGS_TFLITE_JAVA "Builds the IREE TFLite Java bindings with the C API compatibility shim" ON)
 
-option(IREE_BUILD_MICROBENCHMARKS "Builds IREE microbenchmark suites." OFF)
+option(IREE_BUILD_MICROBENCHMARKS "Builds IREE microbenchmark suites." ON)
 
 option(IREE_BUILD_ALL_CHECK_TEST_MODULES "Builds all modules for iree_check_test, regardless of which would be tested" ON)
 

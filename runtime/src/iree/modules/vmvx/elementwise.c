@@ -216,11 +216,19 @@ IREE_UK_ATTRIBUTE_NOINLINE static int iree_uk_generic_x32b_2d(
   int result_code = 0;
   // TODO: Manually unroll to x4 to trigger vectorization.
   for (iree_uk_index_t i = 0; i < size0; ++i) {
-    for (iree_uk_index_t j = 0; j < size1; ++j) {
-      iree_uk_generic_x32b_op(opcode, &result_code,
-                              &lhs[i * lhs_stride0 + j * lhs_stride1],
-                              &rhs[i * rhs_stride0 + j * rhs_stride1],
-                              &out[i * out_stride0 + j * out_stride1]);
+    const iree_uk_uint32_t* lhs_i = &lhs[i * lhs_stride0];
+    const iree_uk_uint32_t* rhs_i = &rhs[i * rhs_stride0];
+    iree_uk_uint32_t* out_i = &out[i * out_stride0];
+
+    iree_uk_index_t j = 0;
+    for (; j + 3 < size1; j += 4) {
+      iree_uk_generic_x32b_op(opcode, &result_code, &lhs_i[j * lhs_stride1], &rhs_i[j * rhs_stride1], &out_i[j * out_stride1]);
+      iree_uk_generic_x32b_op(opcode, &result_code, &lhs_i[(j + 1) * lhs_stride1], &rhs_i[(j + 1) * rhs_stride1], &out_i[(j + 1) * out_stride1]);
+      iree_uk_generic_x32b_op(opcode, &result_code, &lhs_i[(j + 2) * lhs_stride1], &rhs_i[(j + 2) * rhs_stride1], &out_i[(j + 2) * out_stride1]);
+      iree_uk_generic_x32b_op(opcode, &result_code, &lhs_i[(j + 3) * lhs_stride1], &rhs_i[(j + 3) * rhs_stride1], &out_i[(j + 3) * out_stride1]);
+    }
+    for (int k = 0; k < size1 - j; ++k){
+      iree_uk_generic_x32b_op(opcode, &result_code, &lhs_i[(j + k) * lhs_stride1], &rhs_i[(j + k) * rhs_stride1], &out_i[(j + k) * out_stride1]);
     }
   }
   return result_code;
@@ -238,12 +246,20 @@ IREE_UK_ATTRIBUTE_NOINLINE static int iree_uk_generic_x32u_2d(
     // Sizes.
     iree_uk_index_t size0, iree_uk_index_t size1) {
   int result_code = 0;
-  // TODO: Manually unroll to x4 to trigger vectorization.
+  // Manually unroll to x4 to trigger vectorization.
   for (iree_uk_index_t i = 0; i < size0; ++i) {
-    for (iree_uk_index_t j = 0; j < size1; ++j) {
-      iree_uk_generic_x32u_op(opcode, &result_code,
-                              &in[i * in_stride0 + j * in_stride1],
-                              &out[i * out_stride0 + j * out_stride1]);
+    const iree_uk_uint32_t* in_i = &in[i * in_stride0];
+    iree_uk_uint32_t* out_i = &out[i * out_stride0];
+
+    iree_uk_index_t j = 0;
+    for (; j + 3 < size1; j += 4) {
+      iree_uk_generic_x32u_op(opcode, &result_code, &in_i[j * in_stride1], &out_i[j * out_stride1]);
+      iree_uk_generic_x32u_op(opcode, &result_code, &in_i[(j + 1) * in_stride1], &out_i[(j + 1) * out_stride1]);
+      iree_uk_generic_x32u_op(opcode, &result_code, &in_i[(j + 2) * in_stride1], &out_i[(j + 2) * out_stride1]);
+      iree_uk_generic_x32u_op(opcode, &result_code, &in_i[(j + 3) * in_stride1], &out_i[(j + 3) * out_stride1]);
+    }
+    for (; j < size1; ++j) {
+      iree_uk_generic_x32u_op(opcode, &result_code, &in_i[j * in_stride1], &out_i[j * out_stride1]);
     }
   }
   return result_code;
